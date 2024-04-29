@@ -1,2 +1,7 @@
-# basic-table-front-ui
-PC端基础页面统一组件(基于Element UI)
+# vue-admin-template
+
+# install dependency
+npm install
+
+# develop
+npm run dev
