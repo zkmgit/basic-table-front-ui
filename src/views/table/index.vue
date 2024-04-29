@@ -1,78 +1,66 @@
 <template>
-  <div class="app-container">
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
+  <div>
+    <basic-table
+      ref="basicTableRef"
+      :form-schemas="formSchemas"
+      :query-params="queryParams"
+      :table-columns="tableColumns"
+      :selection="true"
+      :api-fn="apiFn"
     >
-      <el-table-column align="center" label="ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Title">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
-        </template>
-      </el-table-column>
-    </el-table>
+
+      <template #tableButton>
+        <el-button type="primary" size="small" icon="el-icon-edit">测试按钮1</el-button>
+      </template>
+      <!-- 插槽使用 -->
+      <template #index="{ index }">
+        {{ index + 1 }}
+      </template>
+
+      <template #action="{ data }">
+        <el-button type="primary" size="small" icon="el-icon-edit">测试按钮2{{ data.id }}</el-button>
+      </template>
+
+    </basic-table>
   </div>
 </template>
-
 <script>
-import { getList } from '@/api/table'
+import { BasicTable } from '@/components/Table'
+import { getFormSchemas } from '@/components/Table/src/form/formSchemasDeal'
+import { queryPageData } from './api'
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
+  name: 'Table',
+  components: { BasicTable },
   data() {
     return {
-      list: null,
-      listLoading: true
+      queryParams: {
+        name: '',
+        userIds: [],
+        status: '',
+        time: []
+      },
+      apiFn: () => {},
+      formSchemas: [],
+      tableColumns: [
+        { label: '序号', prop: 'index', slot: 'index', width: 70 },
+        { label: 'ID', prop: 'id', width: 160 },
+        { label: '用户名', prop: 'name', width: 200 },
+        { label: '性别', prop: 'sex', width: 150 },
+        { label: '状态', prop: 'status', width: 110 },
+        { label: 'age', prop: 'age', width: 100 },
+        { label: '操作', slot: 'action', width: 160, fixed: 'right' }
+      ]
     }
   },
-  created() {
-    this.fetchData()
+  async created() {
+    this.apiFn = queryPageData
+    this.formSchemas = getFormSchemas(Object.keys(this.queryParams), this.$route.name)
   },
   methods: {
-    fetchData() {
-      this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
+    // 表格刷新事件
+    refreshTableData() {
+      this.$refs.basicTableRef.queryData()
     }
   }
 }
