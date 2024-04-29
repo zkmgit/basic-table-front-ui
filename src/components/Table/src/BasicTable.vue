@@ -202,10 +202,10 @@ export default {
       if (params) {
         const apiResult = await this.apiFn(params)
 
-        if (apiResult && apiResult.code === '1') {
-          const { total, list } = apiResult.result
-          if (isArray(list) && list.length > 0) {
-            this.tableData = isFunction(this.afterFetch) ? this.afterFetch(list) : list
+        if (apiResult && apiResult.code === 20000) {
+          const { total, items } = apiResult.data
+          if (isArray(items) && items.length > 0) {
+            this.tableData = isFunction(this.afterFetch) ? this.afterFetch(items) : items
           } else {
             this.tableData = []
           }

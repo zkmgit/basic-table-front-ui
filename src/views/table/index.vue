@@ -45,10 +45,10 @@ export default {
       tableColumns: [
         { label: '序号', prop: 'index', slot: 'index', width: 70 },
         { label: 'ID', prop: 'id', width: 160 },
-        { label: '用户名', prop: 'name', width: 200 },
-        { label: '性别', prop: 'sex', width: 150 },
+        { label: 'author', prop: 'author', width: 200 },
+        { label: 'title', prop: 'title', width: 150 },
         { label: '状态', prop: 'status', width: 110 },
-        { label: 'age', prop: 'age', width: 100 },
+        { label: 'display_time', prop: 'display_time', width: 100 },
         { label: '操作', slot: 'action', width: 160, fixed: 'right' }
       ]
     }
